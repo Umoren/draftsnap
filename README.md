@@ -1,40 +1,59 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MarkSnap: Instant Image-to-Markdown Converter
+
+MarkSnap is a user-friendly web application designed to speed up the workflow of technical writers, bloggers, and documentation specialists. It allows users to instantly convert images into markdown syntax, saving time and improving productivity in content creation processes.
+
+## Features
+
+- **Drag-and-Drop Upload**: Easily upload multiple images with a simple drag-and-drop interface.
+- **Instant Markdown Conversion**: Automatically generates markdown syntax for uploaded images.
+- **Bulk Processing**: Handle multiple images at once for efficient workflow.
+- **Custom Captions**: Add and edit captions for each image directly in the app.
+- **Preview Functionality**: See how your markdown will render in real-time.
+- **Copy-to-Clipboard**: One-click copying of generated markdown for easy integration into your documents.
+- **Image Hosting**: Automatic uploading to Imgur for hassle-free image hosting.
+- **History Tracking**: Keep track of your recently uploaded images for quick access.
+- **Responsive Design**: Seamless experience across desktop and mobile devices.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Node.js (v14 or later)
+- npm or yarn
+- Imgur API Client ID (for image hosting)
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
+```sh
+npm install
 ```
+3. Create a `.env.local` file in the root directory and add your Imgur Client ID:
+```env
+NEXT_PUBLIC_IMGUR_CLIENT_ID=your_imgur_client_id_here
+```
+4. Run the development server:
+```sh
+npm run dev
+```
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Usage
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+1. Navigate to the Upload page.
+2. Drag and drop images onto the designated area, or click to select files from your device.
+3. Add captions to your images if desired.
+4. Click the "Upload" button to process your images.
+5. Once uploaded, you'll see the generated markdown for each image.
+6. Use the "Copy Markdown" button to copy the generated syntax to your clipboard.
+7. Paste the markdown into your document or content management system.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Configuration
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+You can customize various aspects of MarkSnap by modifying the settings in the `config.js` file:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- `MAX_FILE_SIZE`: Maximum allowed file size for uploads (default: 5MB)
+- `MAX_FILES`: Maximum number of files allowed per upload (default: 5)
+- `DEFAULT_CAPTION_PREFIX`: Default prefix for image captions
+- `DEFAULT_CAPTION_SUFFIX`: Default suffix for image captions
