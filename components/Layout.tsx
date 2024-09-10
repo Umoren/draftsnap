@@ -1,12 +1,15 @@
 import { useState, useEffect, ReactNode } from 'react'
-import { LayoutDashboard, Upload, History, Settings, Menu } from 'lucide-react'
+import { LayoutDashboard, Upload, History, Settings, Menu, Edit } from 'lucide-react'
 import { useRouter } from 'next/router'
+import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogAction } from "@/components/ui/alert-dialog"
+import { Button } from './ui/button'
 
 const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
     { icon: Upload, label: 'Upload', href: '/upload' },
     { icon: History, label: 'History', href: '/history' },
     { icon: Settings, label: 'Settings', href: '/settings' },
+    { icon: Edit, label: 'md editor', href: '#', comingSoon: true },
 ]
 
 interface AppLayoutProps {
@@ -19,6 +22,7 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
     const [activeTab, setActiveTab] = useState('Dashboard')
     const [currentDateTime, setCurrentDateTime] = useState('')
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+    const [showComingSoonAlert, setShowComingSoonAlert] = useState(false)
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -59,11 +63,18 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
                                                     }`}
                                                 onClick={(e) => {
                                                     e.preventDefault()
-                                                    handleNavClick(item.label, item.href)
+                                                    if (item.comingSoon) {
+                                                        setShowComingSoonAlert(true)
+                                                    } else {
+                                                        handleNavClick(item.label, item.href)
+                                                    }
                                                 }}
                                             >
                                                 <item.icon className="mr-3 h-6 w-6" />
                                                 {item.label}
+                                                {item.comingSoon && (
+                                                    <span className="ml-2 text-xs text-gray-400">(coming soon)</span>
+                                                )}
                                             </a>
                                         </li>
                                     ))}
@@ -97,7 +108,19 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
                         </div>
                     </div>
                 </main>
+                <AlertDialog open={showComingSoonAlert} onOpenChange={setShowComingSoonAlert}>
+                    <AlertDialogContent>
+                        <AlertDialogTitle>Coming Soon!</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            The Markdown Editor feature is currently in development. We're excited to bring you this powerful tool in the near future!
+                        </AlertDialogDescription>
+                        <AlertDialogAction asChild>
+                            <Button className="mt-4" onClick={() => setShowComingSoonAlert(false)}>Close</Button>
+                        </AlertDialogAction>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
+
         </>
     )
 }
