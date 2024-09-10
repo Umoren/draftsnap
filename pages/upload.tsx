@@ -3,7 +3,7 @@ import Upload from '../components/Upload'
 
 export default function UploadPage() {
     return (
-        <AppLayout>
+        <AppLayout title='what are you uploading today?'>
             <Upload />
         </AppLayout>
     )

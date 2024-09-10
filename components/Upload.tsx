@@ -1,10 +1,16 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { X, Upload as UploadIcon, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import MarkdownPreview from './MarkdownPreview';
+import { CustomAlert } from './ui/custom-alert';
+import { Progress } from "@/components/ui/progress"
+import toast from 'react-hot-toast';
+import { v4 as uuidv4 } from 'uuid';
+import ProgressBar from './ProgressBar';
+
 
 const MAX_FILES = 5;
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -15,11 +21,20 @@ interface FileWithCaption {
     url: string;
 }
 
-
 export default function Upload() {
     const [files, setFiles] = useState<FileWithCaption[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const [settings, setSettings] = useState({ captionPrefix: '', captionSuffix: '' });
+
+    useEffect(() => {
+        const storedSettings = JSON.parse(localStorage.getItem('appSettings') || '{}');
+        setSettings({
+            captionPrefix: storedSettings.captionPrefix || '',
+            captionSuffix: storedSettings.captionSuffix || ''
+        });
+    }, []);
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
         setError(null);
@@ -65,23 +80,96 @@ export default function Upload() {
     const handleUpload = async () => {
         setIsLoading(true);
         setError(null);
-        // TODO: Implement actual upload to Imgur or similar service
-        // For now, we'll simulate an upload
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setIsLoading(false);
+        setProgress(0);
+
+        const totalFiles = files.length;
+        let completedFiles = 0;
+
+        const uploadPromises = files.map(async (file, index) => {
+            const formData = new FormData();
+            formData.append('image', file.file);
+            formData.append('title', file.caption);
+
+            try {
+                const response = await fetch('/api/upload-imgur', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Upload failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+                completedFiles++;
+                const newProgress = (completedFiles / totalFiles) * 100;
+                console.log(`File ${index + 1} completed. Progress: ${newProgress}%`);
+                setProgress(newProgress);
+
+                return {
+                    ...file,
+                    url: data.link
+                };
+            } catch (error) {
+                console.error('Error uploading to Imgur:', error);
+                throw error;
+            }
+        });
+
+        try {
+            const uploadedFiles = await Promise.all(uploadPromises);
+            setFiles(uploadedFiles);
+
+            // Save to history
+            const historyItems = uploadedFiles.map(file => ({
+                id: uuidv4(),
+                url: file.url,
+                caption: file.caption,
+                date: new Date().toISOString(),
+                size: file.file.size
+            }));
+
+            const existingHistory = JSON.parse(localStorage.getItem('uploadHistory') || '[]');
+            const newHistory = [...historyItems, ...existingHistory].slice(0, 50); // Keep last 50 items
+            localStorage.setItem('uploadHistory', JSON.stringify(newHistory));
+            toast.custom((t) => (
+                <CustomAlert
+                    title="Success"
+                    description="All images uploaded successfully!"
+                    variant="default"
+                />
+            ));
+        } catch (error) {
+            setError(`Failed to upload one or more images. Please try again. Error: ${error}`);
+            toast.custom((t) => (
+                <CustomAlert
+                    title="Error"
+                    description={`Failed to upload one or more images. Please try again. Error: ${error}`}
+                    variant="destructive"
+                />
+            ));
+        } finally {
+            setIsLoading(false);
+            setProgress(100); // Ensure the progress bar reaches 100% at the end
+        }
     };
+
+    useEffect(() => {
+        console.log('Progress updated:', progress);
+    }, [progress]);
 
     const clearAll = () => {
         setFiles([]);
         setError(null);
     };
 
-    const generateMarkdown = (files: FileWithCaption[]) => {
+    const generateMarkdown = useCallback((files: FileWithCaption[]) => {
+        const { captionPrefix, captionSuffix } = settings;
+
         return files.map(file => {
-            let markdown = `![${file.caption}](${file.url})`;
-            return markdown;
+            return `![${captionPrefix}${file.caption}${captionSuffix}](${file.url})`;
         }).join('\n\n');
-    };
+    }, [settings]);
 
     const markdown = generateMarkdown(files);
 
@@ -140,17 +228,33 @@ export default function Upload() {
                 </div>
             )}
 
-            <div className="flex space-x-4">
-                <Button
-                    onClick={handleUpload}
-                    disabled={files.length === 0 || isLoading}
-                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-                >
-                    {isLoading ? 'Processing...' : 'Upload'}
-                </Button>
-                <Button onClick={clearAll} variant="muted" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/80">
-                    Clear All
-                </Button>
+            <div className="flex flex-col space-y-4">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:space-x-4 space-y-4 sm:space-y-0">
+                    <Button
+                        onClick={handleUpload}
+                        disabled={files.length === 0 || isLoading}
+                        className="bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto"
+                    >
+                        {isLoading ? 'Uploading...' : 'Upload'}
+                    </Button>
+                    <Button
+                        onClick={clearAll}
+                        variant="destructive"
+                        className="w-full sm:w-auto"
+                    >
+                        Clear All
+                    </Button>
+                </div>
+                {isLoading && (
+
+                    <div className="w-full">
+                        <div className="flex justify-between mb-1">
+                            <span className="text-sm font-medium">Uploading...</span>
+                            {/* <span className="text-sm font-medium">{`${progress.toFixed(0)}%`}</span> */}
+                        </div>
+                        {/* <Progress value={progress} className="w-full" /> */}
+                    </div>
+                )}
             </div>
 
             <MarkdownPreview

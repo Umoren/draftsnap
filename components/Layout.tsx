@@ -10,10 +10,11 @@ const navItems = [
 ]
 
 interface AppLayoutProps {
-    children: ReactNode
+    children: ReactNode,
+    title?: string
 }
 
-export default function AppLayout({ children }: AppLayoutProps) {
+export default function AppLayout({ children, title }: AppLayoutProps) {
     const router = useRouter()
     const [activeTab, setActiveTab] = useState('Dashboard')
     const [currentDateTime, setCurrentDateTime] = useState('')
@@ -39,7 +40,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
 
     return (
         <>
-            <div className="flex h-screen bg-muted font-sans">
+            <div className="flex h-screen bg-primary-foreground font-sans">
                 {/* Sidebar */}
                 <aside
                     className={`${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
@@ -47,7 +48,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 >
                     <div className="flex h-full flex-col justify-between p-4">
                         <div>
-                            <h1 className="mb-8 text-2xl font-bold">MarkSnap</h1>
+                            <h1 className="mb-8 text-2xl font-bold">marksnap</h1>
                             <nav>
                                 <ul className="space-y-2">
                                     {navItems.map((item) => (
@@ -69,16 +70,20 @@ export default function AppLayout({ children }: AppLayoutProps) {
                                 </ul>
                             </nav>
                         </div>
-                        <div className="text-sm text-gray-400">Made by Samuel</div>
+                        <div className="text-sm text-gray-400">
+                            <a href='https://umoren.vercel.app' target='_blank'>
+                                Made by Samuel
+                            </a>
+                        </div>
                     </div>
                 </aside>
 
                 {/* Main content */}
-                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-muted">
-                    <div className="container mx-auto px-6 py-8">
+                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-primary-foreground">
+                    <div className="container mx-auto px-6 py-6">
                         <div className="mb-8 flex items-center justify-between">
-                            <h2 className="text-2xl font-semibold text-foreground">Welcome back, User</h2>
-                            <p className="text-sm text-muted-foreground">{currentDateTime}</p>
+                            <h2 className="text-2xl font-semibold text-foreground">{title || "👋"}</h2>
+                            {/* <p className="text-sm text-muted-foreground">{currentDateTime}</p> */}
                         </div>
                         <button
                             className="fixed right-4 top-4 rounded-full bg-gray-900 p-2 text-white lg:hidden"
@@ -86,7 +91,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         >
                             <Menu className="h-6 w-6" />
                         </button>
-                        <div className="rounded-lg bg-white p-6 shadow-md">
+                        <div className="rounded-lg bg-primary-foreground p-4 border-[0.5px] text-secondary-foreground">
                             {/* Main content container */}
                             {children}
                         </div>
