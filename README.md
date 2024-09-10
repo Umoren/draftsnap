@@ -1,6 +1,6 @@
-# MarkSnap: Instant Image-to-Markdown Converter
+# DraftSnap: Instant Image-to-Markdown Converter
 
-MarkSnap is a user-friendly web application designed to speed up the workflow of technical writers, bloggers, and documentation specialists. It allows users to instantly convert images into markdown syntax, saving time and improving productivity in content creation processes.
+DraftSnap is a user-friendly web application designed to speed up the workflow of technical writers, bloggers, and documentation specialists. It allows users to instantly convert images into markdown syntax, saving time and improving productivity in content creation processes.
 
 ## Features
 
@@ -51,7 +51,7 @@ npm run dev
 
 ## Configuration
 
-You can customize various aspects of MarkSnap by modifying the settings in the `config.js` file:
+You can customize various aspects of DraftSnap by modifying the settings in the `config.js` file:
 
 - `MAX_FILE_SIZE`: Maximum allowed file size for uploads (default: 5MB)
 - `MAX_FILES`: Maximum number of files allowed per upload (default: 5)

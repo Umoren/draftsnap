@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { toast } from 'react-hot-toast'
 import Link from 'next/link'
-import { truncate } from 'fs'
 
 interface UploadItem {
     id: string
@@ -60,7 +59,7 @@ export default function Dashboard() {
         <div className="space-y-6">
             <Card className="bg-primary text-primary-foreground">
                 <CardContent className="pt-6">
-                    <h2 className="text-2xl font-bold mb-2">Welcome to marksnap!</h2>
+                    <h2 className="text-2xl font-bold mb-2">Welcome to draftsnap!</h2>
                     <p>Easily convert your images to markdown. Start by uploading an image.</p>
                     <Link href="/upload">
                         <Button className="mt-4" variant="secondary">
@@ -164,7 +163,7 @@ export default function Dashboard() {
                         </CardHeader>
                         <CardContent className="flex items-center">
                             <Info className="h-8 w-8 text-primary mr-4" />
-                            <p>marksnap uses local storage to keep your upload history. Your data stays on your device!</p>
+                            <p>draftsnap uses local storage to keep your upload history. Your data stays on your device!</p>
                         </CardContent>
                     </Card>
                 </div>

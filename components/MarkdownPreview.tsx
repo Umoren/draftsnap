@@ -17,7 +17,7 @@ export default function MarkdownPreview({ markdown }: MarkdownPreviewProps) {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'marksnap_output.md';
+        a.download = 'draftsnap_output.md';
         a.click();
         URL.revokeObjectURL(url);
     };

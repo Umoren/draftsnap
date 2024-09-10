@@ -1,5 +1,5 @@
 {
-  "name": "marksnap",
+  "name": "draftsnap",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -23,7 +23,6 @@
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "formidable": "^3.5.1",
-    "lodash": "^4.17.21",
     "lucide-react": "^0.439.0",
     "next": "14.2.9",
     "next-themes": "^0.3.0",

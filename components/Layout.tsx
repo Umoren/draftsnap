@@ -48,7 +48,7 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
                 >
                     <div className="flex h-full flex-col justify-between p-4">
                         <div>
-                            <h1 className="mb-8 text-2xl font-bold">marksnap</h1>
+                            <h1 className="mb-8 text-2xl font-bold">draftsnap</h1>
                             <nav>
                                 <ul className="space-y-2">
                                     {navItems.map((item) => (
