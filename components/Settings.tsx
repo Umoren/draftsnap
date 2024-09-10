@@ -50,12 +50,9 @@ export default function SettingsPage() {
 
     return (
         <div className="flex">
-            <main className="flex-1 overflow-y-auto">
+            <main className="flex-1">
                 <Card>
-                    <CardHeader>
-                        <CardTitle>Application Settings</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
+                    <CardContent className="space-y-6 p-4">
                         <div className="space-y-2">
                             <Label htmlFor="imageHost">Default Image Host</Label>
                             <Select

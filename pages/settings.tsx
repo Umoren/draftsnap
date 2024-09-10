@@ -3,7 +3,7 @@ import SettingsPage from '@/components/Settings'
 
 export default function Home() {
     return (
-        <AppLayout>
+        <AppLayout title='Application Settings'>
             <SettingsPage />
         </AppLayout>
     )
